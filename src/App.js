@@ -7,6 +7,7 @@ import AboutPage from './Components/AboutPage';
 import LoginPage from './Components/Login';
 import NavBar from './Main/NavBar';
 import InqueryPage from './Components/acInqueryPage';
+import AuctionPage from './Components/auctionPage'
 
 function App() {
   const authState = useSelector(state => state.auth);
@@ -28,6 +29,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/acInquery" element={<InqueryPage />} />
+        <Route path="/auction" element={<AuctionPage />} />
       </Routes>
     </Router>
   );

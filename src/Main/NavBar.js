@@ -51,6 +51,7 @@ export default function NavBar() {
                   </span>
                 )}
               </Link>
+              <Link className="text-white hover:text-gray-300" to="/auction">Auction</Link>
               <button
                 className="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-700"
                 onClick={handleLogout}
