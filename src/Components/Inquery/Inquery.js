@@ -1,30 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getInquery, replyInquery } from '../actions/inqueryAction';
+import { useParams } from 'react-router-dom';
+import { viewInqueries, replyInquery } from '../../actions/inqueryAction';
 
 export default function AcInqueryPage() {
   const dispatch = useDispatch();
   const inqueryState = useSelector(state => state.inquery);
   const [replyMessages, setReplyMessages] = useState({});
   const [activeTab, setActiveTab] = useState('Pending');
-  const [inquiryCount, setInquiryCount] = useState(0);
-  const fetchInquiryCount = () => {
-    // Simulate an API call or get from localStorage
-    const count = localStorage.getItem('inqueryCount') || 0;
-    setInquiryCount(count);
-  };
-
-
+  const { auctionID } = useParams();
+   
   useEffect(() => {
-    fetchInquiryCount();
-    dispatch(getInquery());
-    const interval = setInterval(() => {
-      fetchInquiryCount();
-      dispatch(getInquery());
-    }, 1000); // Update every 1 second
-  
-    return () => clearInterval(interval); 
-  }, [dispatch]);
+    if (auctionID) {
+      dispatch(viewInqueries(auctionID));
+    }
+  }, [dispatch, auctionID]);
 
   const handleReply = (inqueryID, replyMessage) => {
     dispatch(replyInquery(inqueryID, replyMessage));
@@ -41,7 +31,10 @@ export default function AcInqueryPage() {
     }));
   };
 
- 
+  if (inqueryState.loading) {
+    return <p>Loading...</p>;
+  }
+
   if (inqueryState.error) {
     return <p>Error: {inqueryState.error}</p>;
   }
@@ -108,11 +101,6 @@ export default function AcInqueryPage() {
           onClick={() => setActiveTab('Pending')}
         >
           Pending
-          {inquiryCount > 0 && (
-                  <span className="absolute -mt-4 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
-                    {inquiryCount}
-                  </span>
-                )}
         </button>
         <button
           className={`px-4 py-2 rounded ${activeTab === 'Replied' ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}

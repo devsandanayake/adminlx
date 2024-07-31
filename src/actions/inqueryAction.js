@@ -48,4 +48,16 @@ export const replyInquery = (inqueryID, reply) => {
 }
 
 
+export const viewInqueries = (auctionID) => {
+    return (dispatch) => {
+        dispatch(inqueryRequest());
+        axiosInstance.get(`/api/auction-inquery/viewInqueries/${auctionID}`)
+            .then(response => {
+                dispatch(inquerySuccess(response.data));
+            })
+            .catch(error => {
+                dispatch(inqueryFailure(error.message));
+            });
+    }
+}
 
