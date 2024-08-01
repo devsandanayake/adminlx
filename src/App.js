@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-
+import Layout from './Layout';
 import HomePage from './Components/Home';
 import AboutPage from './Components/AboutPage';
 import LoginPage from './Components/Login';
@@ -27,7 +27,7 @@ function App() {
   }
   return (
     <Router>
-      <NavBar/>
+      <Layout>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
@@ -37,7 +37,9 @@ function App() {
         <Route path="/userProfiles" element={<UserProfiles />} />
         <Route path="/userAds/:username" element={<UserAds />} />
       </Routes>
+      </Layout>
     </Router>
+    
   );
 }
 
