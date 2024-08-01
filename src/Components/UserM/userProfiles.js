@@ -59,7 +59,13 @@ export default function UserProfiles() {
 
               {activeTab === 'user' && (
                 <div className="flex justify-end space-x-2">
-                  <button className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition duration-200">
+                  <button className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition duration-200"
+                  onClick={()=>{
+                    const handleClick = ()=>{
+                      window.location = `/userAds/${user.username}`;
+                    }
+                    handleClick();
+                  }}>
                     View Advertisements
                   </button>
                   <button className="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition duration-200">

@@ -1,4 +1,3 @@
-import { type } from "@testing-library/user-event/dist/type";
 import axiosInstance from "../axiosConfig";
 
 export const USER_REQUEST = "USER_REQUEST";
@@ -34,5 +33,18 @@ export const getUser = () => {
         );
     }
 }
+
+export const userPostAds = (username) => {
+    return (dispatch) => {
+      dispatch(userRequest());
+      axiosInstance.get(`/api/users/viewAllAds/${username}`)
+        .then(response => {
+          dispatch(userSuccess(response.data.ads));
+        })
+        .catch(error => {
+          dispatch(userFailure(error.message));
+        });
+    };
+  }
 
 
