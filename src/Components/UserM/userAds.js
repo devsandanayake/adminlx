@@ -12,8 +12,7 @@ export default function UserAds() {
     dispatch(userPostAds(username));
   }, [dispatch, username]);
 
-  console.log('userADS:', userADS); // Logging to check the structure of userADS
-
+   
   return (
     <div className="container mx-auto p-4">
       {Array.isArray(userADS.data) && userADS.data.length > 0 ? (
