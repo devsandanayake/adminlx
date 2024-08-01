@@ -36,7 +36,14 @@ export default function AuctionPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {Array.isArray(auctionState.data) && auctionState.data.map((auction, index) => (
           <div key={index} className="bg-white shadow-md rounded-lg p-6">
-            <p className=''><a href={`/inquery/${auction.auctionStatus.auctionID}`}>Notifications</a></p>
+            <p className='mb-5'>
+              <a 
+                href={`/inquery/${auction.auctionStatus.auctionID}`} 
+                className="btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Inquery
+              </a>
+            </p>
             <div className="mb-4">
               <span className="font-bold">Ads Name:</span> {auction.title}
             </div>
