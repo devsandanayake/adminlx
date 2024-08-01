@@ -9,6 +9,7 @@ import NavBar from './Main/NavBar';
 import InqueryPage from './Components/acInqueryPage';
 import AuctionPage from './Components/auctionPage'
 import ViewInqueries from './Components/Inquery/Inquery';
+import UserProfiles from './Components/UserM/userProfiles';
 
 function App() {
   const authState = useSelector(state => state.auth);
@@ -32,6 +33,7 @@ function App() {
         <Route path="/acInquery" element={<InqueryPage />} />
         <Route path="/auction" element={<AuctionPage />} />
         <Route path="/inquery/:auctionID" element={<ViewInqueries />} />
+        <Route path="/userProfiles" element={<UserProfiles />} />
       </Routes>
     </Router>
   );
