@@ -13,6 +13,7 @@ export default function UserProfiles() {
 
   React.useEffect(() => {
     fetchUser();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   const handleTabChange = (tab) => {
