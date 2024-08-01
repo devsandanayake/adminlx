@@ -5,17 +5,17 @@ FROM node:20-alpine AS build
 # Set the working directory
 WORKDIR /usr/src/react-app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+# Copy package.json and yarn.lock to the working directory
+COPY package.json yarn.lock ./
 
 # Install dependencies
-RUN npm install
+RUN yarn install
 
 # Copy the rest of the application files
 COPY . .
 
 # Build the React application
-RUN npm run build
+RUN yarn build
 
 # Stage 2: Serve the built files with Nginx
 FROM nginx:alpine
