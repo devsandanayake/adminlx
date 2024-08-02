@@ -10,6 +10,7 @@ import AuctionPage from './Components/auctionPage'
 import ViewInqueries from './Components/Inquery/Inquery';
 import UserProfiles from './Components/UserM/userProfiles';
 import UserAds from './Components/UserM/userAds';
+import Adspage from './Components/AdsPage/Adspage';
 
 function App() {
   const authState = useSelector(state => state.auth);
@@ -35,6 +36,7 @@ function App() {
         <Route path="/inquery/:auctionID" element={<ViewInqueries />} />
         <Route path="/userProfiles" element={<UserProfiles />} />
         <Route path="/userAds/:username" element={<UserAds />} />
+        <Route path="/adsPage/view/:adCode" element={<Adspage />} />
       </Routes>
       </Layout>
     </Router>

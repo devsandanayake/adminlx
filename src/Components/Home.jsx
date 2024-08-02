@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from '../actions/postAction';
 import { approvelPost } from '../actions/approvelAction';
-
 const App = () => {
   const dispatch = useDispatch();
   const dataState = useSelector((state) => state.data);
@@ -22,6 +21,9 @@ const App = () => {
     return dataState.data
       .filter((post) => post.status === status && parseInt(post.transactionType) === transactionType)
       .map((post) => (
+            <button className='p-2 w-72' onClick={() => {
+              window.location = `/adsPage/view/${post.adCode}`;  
+            }}>
         <li key={post.id} className="bg-white p-4 rounded shadow flex justify-between items-center">
           <div>
             <h3 className="text-lg font-semibold">{post.title}</h3>
@@ -46,6 +48,8 @@ const App = () => {
             </button>
           </div>
         </li>
+        </button>
+       
       ));
   };
 

@@ -39,5 +39,18 @@ export const fetchData = () => {
 };
 
 
+export const fetchDataSpecific = (adCode) => {
+    return (dispatch) => {
+        dispatch(fetchDataRequest());
+        axiosInstance.get(`/api/ads/viewSpecificAdForAdmin/${adCode}`)
+            .then(response => {
+                dispatch(fetchDataSuccess(response.data));
+            })
+            .catch(error => {
+                dispatch(fetchDataFailure(error.message));
+            });
+    };
+}
+
 
 
