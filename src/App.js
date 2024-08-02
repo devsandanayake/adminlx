@@ -5,7 +5,6 @@ import Layout from './Layout';
 import HomePage from './Components/Home';
 import AboutPage from './Components/AboutPage';
 import LoginPage from './Components/Login';
-import NavBar from './Main/NavBar';
 import InqueryPage from './Components/acInqueryPage';
 import AuctionPage from './Components/auctionPage'
 import ViewInqueries from './Components/Inquery/Inquery';
