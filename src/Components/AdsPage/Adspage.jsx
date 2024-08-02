@@ -45,10 +45,13 @@ export default function Adspage() {
             <div>
               <h3 className="text-lg font-semibold mt-4">Images</h3>
               <div className="grid grid-cols-3 gap-4">
-                {postState.data.images.map((image, index) => (
-                  <img key={index} src={ 
-                     `http://124.43.179.118:8081/uploads/${image.split('\\').pop()}` 
-                    }   alt="Advertisement" className="w-full h-32 object-cover rounded" />
+              {postState.data.images.map((image, index) => (
+                  <img 
+                    key={index} 
+                    src={`http://124.43.179.118:8081/${image.replace('../', '')}`} 
+                    alt="Advertisement" 
+                    className="w-full h-32 object-cover rounded" 
+                  />
                 ))}
               </div>
             </div>

@@ -16,7 +16,6 @@ const App = () => {
    
   const pendingCount = dataState.data.filter((post) => post.status === 0 && parseInt(post.transactionType) === 1).length;
 
-  console.log("tect",pendingCount);
   const renderPosts = (status) => {
     return dataState.data
       .filter((post) => post.status === status && parseInt(post.transactionType) === transactionType)
@@ -31,18 +30,24 @@ const App = () => {
               {post.status === 1 ? 'Approved' : post.status === 2 ? 'Rejected' : 'Pending'}
             </p>
           </div>
-          <div className="flex space-x-2">
+                   <div className="flex space-x-2">
             {activeTab !== 'approved' && (
               <button
                 className="bg-green-500 text-white py-1 px-3 rounded hover:bg-green-600"
-                onClick={() => dispatch(approvelPost(post.adCode, 1))}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  dispatch(approvelPost(post.adCode, 1));
+                }}
               >
                 Approve
               </button>
             )}
             <button
               className="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600"
-              onClick={() => dispatch(approvelPost(post.adCode, 2))}
+              onClick={(e) => {
+                e.stopPropagation();
+                dispatch(approvelPost(post.adCode, 2));
+              }}
             >
               Reject
             </button>
