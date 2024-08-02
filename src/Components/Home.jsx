@@ -15,7 +15,7 @@ const App = () => {
 
   
    
-  const pendingCount = dataState.data.filter((post) => post.status === 0 && parseInt(post.transactionType) === transactionType).length;
+  const pendingCount = dataState.data.filter((post) => post.status === 0 && parseInt(post.transactionType) === 1).length;
 
   console.log("tect",pendingCount);
   const renderPosts = (status) => {

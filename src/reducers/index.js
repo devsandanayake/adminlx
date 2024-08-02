@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import dataReducer from './reducer-Allpost';
+import approvelReducer from './reducer-approvel';
 import authReducer from './authReducer';
 import inqueryReducer from './inqueryReducer';
 import auctionReducer from './auctionReducer';
@@ -10,7 +11,8 @@ const rootReducer = combineReducers({
     auth: authReducer,
     inquery: inqueryReducer,
     auction: auctionReducer,
-    user: userReducer
+    user: userReducer,
+    approvel: approvelReducer,
 
 });
 

@@ -1,7 +1,7 @@
 import axiosInstance from "../axiosConfig";
-const APPROVEL_REQUEST = "APPROVEL_REQUEST";
-const APPROVEL_SUCCESS = "APPROVEL_SUCCESS";
-const APPROVEL_FAILURE = "APPROVEL_FAILURE";
+export const APPROVEL_REQUEST = "APPROVEL_REQUEST";
+export const APPROVEL_SUCCESS = "APPROVEL_SUCCESS";
+export const APPROVEL_FAILURE = "APPROVEL_FAILURE";
 
 export const approvelRequest = () => ({
     type: APPROVEL_REQUEST,
