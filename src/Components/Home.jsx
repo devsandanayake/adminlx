@@ -7,16 +7,20 @@ const App = () => {
   const dispatch = useDispatch();
   const dataState = useSelector((state) => state.data);
   const [activeTab, setActiveTab] = useState('pending');
+  const [transactionType, setTractionType] = useState(1); // 1: Rent, 2: Short Term Rent, 3: Auction
 
   useEffect(() => {
     dispatch(fetchData());
   }, [dispatch]);
 
-  const pendingCount = dataState.data.filter((post) => post.status === 0).length;
+  
+   
+  const pendingCount = dataState.data.filter((post) => post.status === 0 && parseInt(post.transactionType) === transactionType).length;
 
+  console.log("tect",pendingCount);
   const renderPosts = (status) => {
     return dataState.data
-      .filter((post) => post.status === status)
+      .filter((post) => post.status === status && parseInt(post.transactionType) === transactionType)
       .map((post) => (
         <li key={post.id} className="bg-white p-4 rounded shadow flex justify-between items-center">
           <div>
@@ -27,12 +31,12 @@ const App = () => {
           </div>
           <div className="flex space-x-2">
             {activeTab !== 'approved' && (
-            <button
-              className="bg-green-500 text-white py-1 px-3 rounded hover:bg-green-600"
-              onClick={() => dispatch(approvelPost(post.adCode, 1))}
-            >
-              Approve
-            </button>
+              <button
+                className="bg-green-500 text-white py-1 px-3 rounded hover:bg-green-600"
+                onClick={() => dispatch(approvelPost(post.adCode, 1))}
+              >
+                Approve
+              </button>
             )}
             <button
               className="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600"
@@ -41,7 +45,6 @@ const App = () => {
               Reject
             </button>
           </div>
-
         </li>
       ));
   };
@@ -50,6 +53,27 @@ const App = () => {
     <div className="min-h-screen bg-gray-100 p-4">
       {dataState.loading && <p className="text-blue-600">Loading...</p>}
       {dataState.error && <p className="text-red-600">Error: {dataState.error}</p>}
+
+      <div className="flex space-x-4 mb-4">
+        <button
+          className={`py-2 px-4 rounded ${transactionType === 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+          onClick={() => setTractionType(1)}
+        >
+          Rent
+        </button>
+        <button
+          className={`py-2 px-4 rounded ${transactionType === 2 ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+          onClick={() => setTractionType(2)}
+        >
+          Short Term Rent
+        </button>
+        <button
+          className={`py-2 px-4 rounded ${transactionType === 3 ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+          onClick={() => setTractionType(3)}
+        >
+          Auction
+        </button>
+      </div>
 
       <div className="flex space-x-4 mb-4">
         <button
