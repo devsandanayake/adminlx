@@ -2,6 +2,9 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDataSpecific } from '../../actions/postAction';
+import { approvelPost } from '../../actions/approvelAction';
+
+
 
 export default function Adspage() {
   const { adCode } = useParams();
@@ -15,6 +18,28 @@ export default function Adspage() {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-4">Advertisement Details</h1>
+      <div className="flex space-x-2">
+             
+             <button
+               className="bg-green-500 text-white py-1 px-3 rounded hover:bg-green-600"
+               onClick={(e) => {
+                 e.stopPropagation();
+                 dispatch(approvelPost(adCode, 1));
+               }}
+             >
+               Approve
+             </button>
+          
+           <button
+             className="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600"
+             onClick={(e) => {
+               e.stopPropagation();
+               dispatch(approvelPost(adCode, 2));
+             }}
+           >
+             Reject
+           </button>
+           </div>
       {postState.loading && <p className="text-blue-600">Loading...</p>}
       {postState.error && <p className="text-red-600">Error: {postState.error}</p>}
       {postState.data && (
@@ -31,7 +56,18 @@ export default function Adspage() {
                 <li><strong>Area Size:</strong> {postState.data.areaSize} sq ft</li>
                 <li><strong>Price:</strong> {postState.data.price} {postState.data.currency}</li>
                 <li><strong>Transaction Type:</strong> {postState.data.transactionType}</li>
-                <li><strong>Status:</strong> {postState.data.status === 1 ? 'Approved' : postState.data.status === 2 ? 'Rejected' : 'Pending'}</li>
+                <li>
+                  <strong>Status:</strong> 
+                  <span className={
+                    postState.data.status === 1 ? 'text-green-500 font-extrabold ml-3' : 
+                    postState.data.status === 2 ? 'text-red-500 font-extrabold ml-3' : 
+                    'text-yellow-500 font-extrabold ml-3'
+                  }>
+                    {postState.data.status === 1 ? 'Approved' : 
+                     postState.data.status === 2 ? 'Rejected' : 
+                     'Pending'}
+                  </span>
+                </li>
               </ul>
             </div>
             <div>

@@ -49,10 +49,10 @@ export default function Sidebar() {
         )}
         {auth.isAuthenticated && (
           <>
-            <Link className="hover:text-gray-300 flex items-center" to="/">
+            <button className="hover:text-gray-300 flex items-center" onClick={()=>window.location='/'}>
               <FaHome className="mr-2" />
               Home
-            </Link>
+            </button>
             <Link className="hover:text-gray-300 relative flex items-center" to="/acInquery">
               <FaInbox className="mr-2" />
               Inquiries
@@ -81,7 +81,7 @@ export default function Sidebar() {
         )}
       </div>
       <p className="text-center text-lg font-semibold text-gray-700 mt-4">
-  Effective Solution Pvt
+  Effective Solutions Pvt
 </p>
     </div>
   );
