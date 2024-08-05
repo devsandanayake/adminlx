@@ -4,6 +4,7 @@ import { fetchData } from '../actions/postAction';
 import { approvelPost } from '../actions/approvelAction';
 import { FaHome, FaBuilding, FaExchangeAlt, FaGavel } from 'react-icons/fa';
 import { FaHourglassHalf, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import { FaCheck, FaTimes } from 'react-icons/fa';
 
 
 const App = () => {
@@ -24,41 +25,44 @@ const App = () => {
     return dataState.data
       .filter((post) => post.status === status && parseInt(post.transactionType) === transactionType)
       .map((post) => (
+                    
+            
             <button className='p-2 w-72' onClick={() => {
               window.location = `/adsPage/view/${post.adCode}`;  
             }}>
-        <li key={post.id} className="bg-white p-4 rounded shadow flex justify-between items-center">
-          <div>
-            <h3 className="text-lg font-semibold">{post.title}</h3>
-            <p className={`mt-2 ${post.status === 1 ? 'text-green-500' : post.status === 2 ? 'text-red-500' : 'text-yellow-500'}`}>
-              {post.status === 1 ? 'Approved' : post.status === 2 ? 'Rejected' : 'Pending'}
-            </p>
-          </div>
-         <div className="flex space-x-2">
-            {activeTab !== 'approved' && (
-              <button
-                className="bg-green-500 text-white py-1 px-3 rounded hover:bg-green-600"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  dispatch(approvelPost(post.adCode, 1));
-                }}
-              >
-                Approve
-              </button>
-            )}
-            <button
-              className="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600"
-              onClick={(e) => {
-                e.stopPropagation();
-                dispatch(approvelPost(post.adCode, 2));
-              }}
-            >
-              Reject
+              <li key={post.id} className="bg-white p-4 rounded shadow-lg  justify-between items-center w-72 h-40">
+                <div>
+                  <h3 className="text-sm font-semibold">{post.title}</h3>
+                  <p className={`mt-2 text-sm ${post.status === 1 ? 'text-green-500' : post.status === 2 ? 'text-red-500' : 'text-yellow-500'}`}>
+                    {post.status === 1 ? 'Approved' : post.status === 2 ? 'Rejected' : 'Pending'}
+                  </p>
+                </div>
+                <div className="flex space-x-2">
+                  {activeTab !== 'approved' && (
+                    <button
+                      className="bg-green-500 text-white py-1 px-3 rounded hover:bg-green-600 shadow-md flex items-center"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        dispatch(approvelPost(post.adCode, 1));
+                      }}
+                    >
+                      <FaCheck className="mr-1" />
+                      Approve
+                    </button>
+                  )}
+                  <button
+                    className="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 shadow-md flex items-center"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      dispatch(approvelPost(post.adCode, 2));
+                    }}
+                  >
+                    <FaTimes className="mr-1" />
+                    Reject
+                  </button>
+                </div>
+              </li>
             </button>
-          </div>
-        </li>
-        </button>
-       
       ));
   };
 
