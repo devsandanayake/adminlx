@@ -11,6 +11,7 @@ import ViewInqueries from './Components/Inquery/Inquery';
 import UserProfiles from './Components/UserM/userProfiles';
 import UserAds from './Components/UserM/userAds';
 import Adspage from './Components/AdsPage/Adspage';
+import Dashboard from './Components/Dashboard/Dashboard';
 
 function App() {
   const authState = useSelector(state => state.auth);
@@ -29,7 +30,8 @@ function App() {
     <Router>
       <Layout>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/Home" element={<HomePage />} />
+        <Route path="/" element={<Dashboard />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/acInquery" element={<InqueryPage />} />
         <Route path="/auction" element={<AuctionPage />} />
