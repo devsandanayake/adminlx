@@ -8,8 +8,22 @@ import { isToday, isFuture, isPast } from 'date-fns';
 import PendingIcon from '../../images/OIP__5_-removebg-preview.png';
 import RepliedIcon from '../../images/replied-icon-20.jpg';
 import { GoAlertFill } from "react-icons/go";
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchData } from '../../actions/postAction';
 
 export default function Dashboard() {
+  const dispatch = useDispatch();
+  const dataState = useSelector((state) => state.data);
+
+  React.useEffect(() => {
+    dispatch(fetchData());
+  }, [dispatch]);
+
+  const pendingCount = dataState.data.filter((post) => post.status === 0).length;
+  const approvedCount = dataState.data.filter((post) => post.status === 1).length;
+  const rejectedCount = dataState.data.filter((post) => post.status === 2).length;
+  
+  
   const activities = [
     { date: '01/02/2021', description: 'nwk nj ndaodnqdno qenodqend edonqedqe' },
     { date: '01/02/2024', description: 'nwk nj ndaodnqdno qenodqend edonqedqe' },
@@ -46,9 +60,11 @@ export default function Dashboard() {
       </p>
       <main className="flex-1 p-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          <StatsCard title="Total Ads" value="145" change="12%" changeType="increase" icons={adsicon} />
-          <StatsCard title="Revenue" value="$3,264" change="8%" changeType="increase" icons={adsicon3} />
-          <StatsCard title="Customers" value="1244" change="12%" changeType="decrease" icons={adsicon2} />
+          <button onClick={()=>{
+            window.location.href = '/home';
+          }}><StatsCard title="Total Ads" value={pendingCount} change={approvedCount} changeType={rejectedCount} icons={adsicon}  cradType='ads'/></button>
+          <button><StatsCard title="Revenue" value="$3,264" change="8%" changeType="increase" icons={adsicon3} /></button>
+          <button><StatsCard title="Customers" value="1244" change="12%" changeType="decrease" icons={adsicon2} /></button>
         </div>
       </main>
       <div className='flex gap-5'>
