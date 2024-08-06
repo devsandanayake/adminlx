@@ -10,27 +10,31 @@ import RepliedIcon from '../../images/replied-icon-20.jpg';
 import { GoAlertFill } from "react-icons/go";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from '../../actions/postAction';
+import {getUser} from '../../actions/userAction';
+
 
 export default function Dashboard() {
   const dispatch = useDispatch();
   const dataState = useSelector((state) => state.data);
+  const userState = useSelector((state) => state.user);
 
   React.useEffect(() => {
     dispatch(fetchData());
+    dispatch(getUser());
   }, [dispatch]);
 
   const pendingCount = dataState.data.filter((post) => post.status === 0).length;
   const approvedCount = dataState.data.filter((post) => post.status === 1).length;
   const rejectedCount = dataState.data.filter((post) => post.status === 2).length;
-  
+  const userCount = userState.data.filter((user) => user.role !== 'admin').length;
   
   const activities = [
-    { date: '01/02/2021', description: 'nwk nj ndaodnqdno qenodqend edonqedqe' },
-    { date: '01/02/2024', description: 'nwk nj ndaodnqdno qenodqend edonqedqe' },
-    { date: '08/05/2024', description: 'nwk nj ndaodnqdno qenodqend edonqedqe' },
-    { date: '01/02/2024', description: 'nwk nj ndaodnqdno qenodqend edonqedqe' },
-    { date: '01/02/2029', description: 'nwk nj ndaodnqdno qenodqend edonqedqe' },
-    { date: '01/02/2024', description: 'nwk nj ndaodnqdno qenodqend edonqedqe' },
+    { date: '01/02/2021', description: '' },
+    { date: '01/02/2024', description: '' },
+    { date: '08/05/2024', description: '' },
+    { date: '01/02/2024', description: '' },
+    { date: '01/02/2029', description: '' },
+    { date: '01/02/2024', description: '' },
   ];
 
   const sortedActivities = activities.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -63,8 +67,8 @@ export default function Dashboard() {
           <button onClick={()=>{
             window.location.href = '/home';
           }}><StatsCard title="Total Ads" value={pendingCount} change={approvedCount} changeType={rejectedCount} icons={adsicon}  cradType='ads'/></button>
-          <button><StatsCard title="Revenue" value="$3,264" change="8%" changeType="increase" icons={adsicon3} /></button>
-          <button><StatsCard title="Customers" value="1244" change="12%" changeType="decrease" icons={adsicon2} /></button>
+          <button><StatsCard title="Auction" value="$3,264" change="8%" changeType="increase" icons={adsicon3} /></button>
+          <button onClick={()=>{window.location.href = '/userProfiles'}}><StatsCard title="Users" value={userCount} change="1" changeType="decrease" icons={adsicon2} cradType='users'/></button>
         </div>
       </main>
       <div className='flex gap-5'>

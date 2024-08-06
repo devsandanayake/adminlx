@@ -9,11 +9,17 @@ export default function StatsCard({ title, value, change, changeType, icons, cra
           <HiAdjustmentsHorizontal className='mt-2 text-xl' />
           <h2 className="text-2xl mb-2">{title}</h2>
         </div>
-        {cradType === 'ads' && (
+       {cradType === 'ads' && (
           <div className='flex gap-2'>
             <p className="text-gray-600">Pending<br/>{value}</p>
             <p className="text-gray-600">Approved<br/>{change}</p>
             <p className="text-gray-600">Rejected<br/>{changeType}</p>
+          </div>
+        )}
+        {cradType === 'users' && (
+          <div className='flex gap-2'>
+            <p className="text-gray-600">Register<br/>{value}</p>
+            <p className="text-gray-600">Active<br/>{change}</p>
           </div>
         )}
       </div>

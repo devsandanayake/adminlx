@@ -45,7 +45,7 @@ export const getAuction = () => {
         dispatch(auctionRequest());
         axiosInstance.get('/api/ads/viewAllAdsForAdmin')
             .then(response => {
-                const data = response.data.filter(ad => ad.transactionType === 1);
+                const data = response.data.filter(ad => ad.transactionType === 4);
                 dispatch(auctionSuccess(data));
             })
             .catch(error => {

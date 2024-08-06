@@ -101,8 +101,13 @@ export default function AcInqueryPage() {
   );
 
   return (
+    
     <div className="p-4">
-      <div className="mb-4">
+        <h1 className="text-2xl font-semibold">Inquiry</h1>
+      <p className="text-gray-600 cursor-pointer">
+        Home / <span className="cursor-pointer">Inquiry</span>
+      </p>
+      <div className="mt-4">
         <button
           className={`mr-4 px-4 py-2 rounded ${activeTab === 'Pending' ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
           onClick={() => setActiveTab('Pending')}
