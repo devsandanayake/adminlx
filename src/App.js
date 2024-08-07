@@ -12,6 +12,8 @@ import UserProfiles from './Components/UserM/userProfiles';
 import UserAds from './Components/UserM/userAds';
 import Adspage from './Components/AdsPage/Adspage';
 import Dashboard from './Components/Dashboard/Dashboard';
+import Lrent from './Components/LongRent/Lrent';
+import ViewModel from './Components/LongRent/ViewModel';
 
 function App() {
   const authState = useSelector(state => state.auth);
@@ -39,6 +41,8 @@ function App() {
         <Route path="/userProfiles" element={<UserProfiles />} />
         <Route path="/userAds/:username" element={<UserAds />} />
         <Route path="/adsPage/view/:adCode" element={<Adspage />} />
+        <Route path="/rentInquiry/sub2" element={<Lrent />} />
+        <Route path="/viewLongrent/:adCode" element={<ViewModel/>} />
       </Routes>
       </Layout>
     </Router>

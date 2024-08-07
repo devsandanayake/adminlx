@@ -5,6 +5,7 @@ import authReducer from './authReducer';
 import inqueryReducer from './inqueryReducer';
 import auctionReducer from './auctionReducer';
 import userReducer from './userReducer';
+import longrentReducer from './longrentReducer';
  
 const rootReducer = combineReducers({
     data: dataReducer,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
     auction: auctionReducer,
     user: userReducer,
     approvel: approvelReducer,
+    longrent: longrentReducer,
 
 });
 
