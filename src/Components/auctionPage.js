@@ -24,8 +24,8 @@ export default function AuctionPage() {
   const handleFormSubmit = (e, adCode) => {
     e.preventDefault();
     if (formData[adCode]) {
-      const { startDate, endDate, startPrice, maxRate } = formData[adCode];
-      dispatch(updateAuction(adCode, startDate, endDate, startPrice, maxRate));
+      const { startDate, endDate, startPrice, maxRate ,BidValue } = formData[adCode];
+      dispatch(updateAuction(adCode, startDate, endDate, startPrice, maxRate ,BidValue));
     }
   };
 
@@ -93,6 +93,17 @@ export default function AuctionPage() {
                 value={formData[auction.adCode]?.maxRate || auction.auctionStatus.maxRate || ''}
                 onChange={(e) => handleInputChange(auction.adCode, 'maxRate', e.target.value)}
               />
+
+             <label className="block mb-2">Bid Value</label>
+              <input
+                type="number"
+                id="BidValue"
+                name="BidValue"
+                className="w-full p-2 border border-gray-300 rounded"
+                value={formData[auction.adCode]?.BidValue || auction.auctionStatus.BidValue || ''}
+                onChange={(e) => handleInputChange(auction.adCode, 'BidValue', e.target.value)}
+              />
+
               <button
                 type="submit"
                 className="bg-green-500 text-white py-1 px-3 rounded hover:bg-green-600 mt-2"

@@ -30,6 +30,7 @@ export default function Sidebar() {
     setInquiryCount(count);
   };
 
+
   useEffect(() => {
     fetchInquiryCount();
     const interval = setInterval(fetchInquiryCount, 10000); // Update every 10 seconds
@@ -90,6 +91,10 @@ export default function Sidebar() {
               <FaGavel className="mr-2" />
               Rent Management
               {showAuctionSubItems ? <FaChevronUp className="ml-2" /> : <FaChevronDown className="ml-2" />}
+              {localStorage.getItem('pendingLRCount') > 0 && (
+                    <span className="absolute top-0 right-0 inline-flex items-center justify-center p-1  bg-red-600 rounded-full">
+                    </span>
+                  )}
             </button>
             {showAuctionSubItems && (
               <div className="ml-6 space-y-2">
@@ -104,6 +109,11 @@ export default function Sidebar() {
                   to="/rentInquiry/sub2"
                 >
                   Long Term Rent Inquiry
+                  {localStorage.getItem('pendingLRCount') > 0 && (
+                    <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
+                      {localStorage.getItem('pendingLRCount')}
+                    </span>
+                  )}
                 </Link>
               </div>
             )}

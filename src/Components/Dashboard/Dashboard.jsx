@@ -67,7 +67,8 @@ export default function Dashboard() {
           <button onClick={()=>{
             window.location.href = '/home';
           }}><StatsCard title="Total Ads" value={pendingCount} change={approvedCount} changeType={rejectedCount} icons={adsicon}  cradType='ads'/></button>
-          <button><StatsCard title="Auction" value="$3,264" change="8%" changeType="increase" icons={adsicon3} /></button>
+          <button onClick={()=>{
+            window.location.href = '/auction'}}><StatsCard title="Auction" value="$3,264" change="8%" changeType="increase" icons={adsicon3} /></button>
           <button onClick={()=>{window.location.href = '/userProfiles'}}><StatsCard title="Users" value={userCount} change="1" changeType="decrease" icons={adsicon2} cradType='users'/></button>
         </div>
       </main>
