@@ -20,6 +20,7 @@ export default function Sidebar() {
 
   const [inquiryCount, setInquiryCount] = useState(0);
   const [showAuctionSubItems, setShowAuctionSubItems] = useState(false);
+  const [showinqurySubItems, setShowinqurySubItems] = useState(false);
 
   const handleLogout = () => {
     dispatch(logoutUser());
@@ -39,6 +40,10 @@ export default function Sidebar() {
 
   const toggleAuctionSubItems = () => {
     setShowAuctionSubItems(!showAuctionSubItems);
+    
+  };
+  const toggleAuctionSubItems1 = () => {
+    setShowinqurySubItems(!showinqurySubItems);
   };
 
   return (
@@ -84,6 +89,45 @@ export default function Sidebar() {
                 </span>
               )}
             </Link>
+             
+            <button
+              className="hover:text-gray-300 hover:scale-105 transform transition duration-300 flex items-center"
+              onClick={toggleAuctionSubItems1}
+            >
+               <FaInbox className="mr-2" />
+               Inquiries Management
+              {showinqurySubItems ? <FaChevronUp className="ml-2" /> : <FaChevronDown className="ml-2" />}
+              {localStorage.getItem('pendingLRCount') > 0 && (
+                    <span className="absolute top-0 right-0 inline-flex items-center justify-center p-1  bg-red-600 rounded-full">
+                    </span>
+                  )}
+            </button>
+            {showinqurySubItems && (
+              <div className="ml-6 space-y-2">
+                <Link
+                  className="hover:text-gray-300 hover:scale-105 transform transition duration-300 flex items-center"
+                  to="/"
+                >
+                  Short Term Rent
+                </Link>
+                <Link
+                  className="hover:text-gray-300 hover:scale-105 transform transition duration-300 flex items-center"
+                  to="/LrentInquiry"
+                >
+                  Long Term Rent Inquiry
+                  {localStorage.getItem('pendingLRCount') > 0 && (
+                    <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
+                      {localStorage.getItem('pendingLRCount')}
+                    </span>
+                  )}
+                </Link>
+              </div>
+            )}
+
+
+
+
+
             <button
               className="hover:text-gray-300 hover:scale-105 transform transition duration-300 flex items-center"
               onClick={toggleAuctionSubItems}

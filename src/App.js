@@ -14,6 +14,7 @@ import Adspage from './Components/AdsPage/Adspage';
 import Dashboard from './Components/Dashboard/Dashboard';
 import Lrent from './Components/LongRent/Lrent';
 import ViewModel from './Components/LongRent/ViewModel';
+import LRinquery from './Components/LongRent/LRinquery';
 
 function App() {
   const authState = useSelector(state => state.auth);
@@ -43,6 +44,7 @@ function App() {
         <Route path="/adsPage/view/:adCode" element={<Adspage />} />
         <Route path="/rentInquiry/sub2" element={<Lrent />} />
         <Route path="/viewLongrent/:adCode" element={<ViewModel/>} />
+        <Route path="/LrentInquiry" element={<LRinquery />} />
       </Routes>
       </Layout>
     </Router>

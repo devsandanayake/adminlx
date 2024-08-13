@@ -48,14 +48,19 @@ export const viewEachLongrent = (adCode) => {
     };
 }
 
-export const updateStatus = (adCode, adminKeyStatus) => {
+export const updateStatus = (adCode, adminKeyStatus,username,monthlyRate,advancePayment,id) => {
     return (dispatch) => {
         dispatch(longrentRequest());
         axiosInstance.patch(`/api/longrental/updateLRentalTransactionStatus`, {
-            adminKeyStatus: adminKeyStatus
+            adminKeyStatus: adminKeyStatus,
+            username:username,
+            monthlyRate:monthlyRate,
+            advancePayment:advancePayment
+
         }, {
             params: {
-                adCode: adCode
+                adCode: adCode,
+                id: id
             }
         })
         .then(response => {
