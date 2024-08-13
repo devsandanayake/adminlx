@@ -1,61 +1,166 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getLongrentInquery } from '../../actions/LRentInquery';
+import { Table, Button, Modal, Select, Input } from 'antd';
+import { getLongrentInquery, updateInqueryStatus } from '../../actions/LRentInquery';
+
+const { Option } = Select;
+
+const AlertPopup = ({ message, onClose }) => (
+  <Modal
+    visible={!!message}
+    onCancel={onClose}
+    footer={[
+      <Button key="close" type="primary" onClick={onClose}>
+        Close
+      </Button>
+    ]}
+  >
+    <p>{message}</p>
+  </Modal>
+);
 
 export default function LRinquery() {
   const dispatch = useDispatch();
   const { data, loading, error } = useSelector((state) => state.LRentInquery);
+  const [selectedAlertMsg, setSelectedAlertMsg] = useState(null);
+  const [isRejectModalVisible, setIsRejectModalVisible] = useState(false);
+  const [currentInqueryID, setCurrentInqueryID] = useState(null);
+  const [replyMessage, setReplyMessage] = useState('');
 
   React.useEffect(() => {
     dispatch(getLongrentInquery());
   }, [dispatch]);
 
+  const handleViewAlertMsg = (msg) => {
+    setSelectedAlertMsg(msg);
+  };
+
+  const handleClosePopup = () => {
+    setSelectedAlertMsg(null);
+  };
+
+  const handleStatusChange = (inqueryID, status) => {
+    if (status === 'Rejected') {
+      setCurrentInqueryID(inqueryID);
+      setIsRejectModalVisible(true);
+    } else {
+      dispatch(updateInqueryStatus(inqueryID, status, ''));
+    }
+  };
+
+  const handleRejectSubmit = () => {
+    dispatch(updateInqueryStatus(currentInqueryID, 'Rejected', replyMessage));
+    setIsRejectModalVisible(false);
+    setReplyMessage('');
+  };
+
+  const handleRejectCancel = () => {
+    setIsRejectModalVisible(false);
+    setReplyMessage('');
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
+  const columns = [
+    { title: 'Full Name', dataIndex: 'fullName', key: 'fullName' },
+    { 
+      title: 'Ads Code', 
+      dataIndex: 'adCode', 
+      key: 'adCode',
+      render: (text) => <a href='/wd'>{text}</a> 
+    },
+    { title: 'Message', dataIndex: 'message', key: 'message' },
+    { title: 'Inquery ID', dataIndex: 'inqueryID', key: 'inqueryID' },
+    { title: 'Username', dataIndex: 'username', key: 'username' },
+    { title: 'Preferred Date', dataIndex: 'preferredDate', key: 'preferredDate' },
+    { title: 'Preferred Time', dataIndex: 'preferredTime', key: 'preferredTime' },
+    { title: 'Alternate Date', dataIndex: 'alternateDate', key: 'alternateDate' },
+    { title: 'Alternate Time', dataIndex: 'alternateTime', key: 'alternateTime' },
+    {
+      title: 'Reply Status',
+      dataIndex: 'replyStatus',
+      key: 'replyStatus',
+      render: (text) => {
+        let color;
+        switch (text) {
+          case 'Pending':
+            color = 'text-blue-500';
+            break;
+          case 'Rejected':
+            color = 'text-red-500';
+            break;
+          case 'AssignAgent':
+            color = 'text-orange-500';
+            break;
+          case 'Completed':
+            color = 'text-green-500';
+            break;
+          default:
+            color = 'text-gray-500';
+        }
+        return <span className={color}>{text}</span>;
+      },
+    },
+    {
+      title: 'Update Status',
+      dataIndex: 'inqueryID',
+      key: 'updateStatus',
+      render: (inqueryID) => (
+        <Select
+          defaultValue="Pending"
+          style={{ width: 120 }}
+          onChange={(value) => handleStatusChange(inqueryID, value)}
+        >
+          <Option value='Pending'>Pending</Option>
+          <Option value='AssignAgent'>Assign Agent</Option>
+          <Option value='Completed'>Completed</Option>
+          <Option value='Rejected'>Rejected</Option>
+        </Select>
+      ),
+    },
+    {
+      title: 'Alert Message',
+      dataIndex: 'alertMsg',
+      key: 'alertMsg',
+      render: (text) => (
+        text ? (
+          <Button type="link" onClick={() => handleViewAlertMsg(text)}>
+            View
+          </Button>
+        ) : (
+          'N/A'
+        )
+      ),
+    }
+  ];
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-      {data.map((item) => (
-        <div key={item.inqueryID} className="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden">
-          <div className="p-6">
-            <h2 className="text-xl font-bold mb-2">{item.fullName}</h2>
-            <p className="text-gray-600 mb-4">{item.message}</p>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <h3 className="text-sm font-semibold text-gray-500">Inquery ID</h3>
-                <p className="text-gray-700">{item.inqueryID}</p>
-              </div>
-              <div>
-                <h3 className="text-sm font-semibold text-gray-500">Username</h3>
-                <p className="text-gray-700">{item.username}</p>
-              </div>
-              <div>
-                <h3 className="text-sm font-semibold text-gray-500">Preferred Date</h3>
-                <p className="text-gray-700">{item.preferredDate}</p>
-              </div>
-              <div>
-                <h3 className="text-sm font-semibold text-gray-500">Preferred Time</h3>
-                <p className="text-gray-700">{item.preferredTime}</p>
-              </div>
-              <div>
-                <h3 className="text-sm font-semibold text-gray-500">Alternate Date</h3>
-                <p className="text-gray-700">{item.alternateDate}</p>
-              </div>
-              <div>
-                <h3 className="text-sm font-semibold text-gray-500">Alternate Time</h3>
-                <p className="text-gray-700">{item.alternateTime}</p>
-              </div>
-              <div>
-                <h3 className="text-sm font-semibold text-gray-500">Reply Status</h3>
-                <p className={`text-gray-700 ${item.replyStatus === 'Pending' ? 'text-red-500' : 'text-green-500'}`}>{item.replyStatus}</p>
-              </div>
-            </div>
-            {item.alertMsg && (
-              <p className="mt-4 text-red-500 text-sm">{item.alertMsg}</p>
-            )}
-          </div>
-        </div>
-      ))}
+    <div className="p-6">
+      <Table
+        columns={columns}
+        dataSource={data}
+        rowKey="inqueryID"
+        loading={loading}
+        pagination={false}
+      />
+
+      <AlertPopup message={selectedAlertMsg} onClose={handleClosePopup} />
+
+      <Modal
+        title="Reject Inquery"
+        visible={isRejectModalVisible}
+        onCancel={handleRejectCancel}
+        onOk={handleRejectSubmit}
+        okText="Submit"
+      >
+        <Input.TextArea
+          rows={4}
+          value={replyMessage}
+          onChange={(e) => setReplyMessage(e.target.value)}
+          placeholder="Enter reply message"
+        />
+      </Modal>
     </div>
   );
 }

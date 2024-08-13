@@ -31,3 +31,26 @@ export const getLongrentInquery = () => {
         });
     }
 }
+
+
+export const updateInqueryStatus = (inqueryID, status, reply) => {
+     return (dispatch) => {
+           console.log("inqueryID",inqueryID , reply);
+            dispatch(longrentInqueryRequest());
+            axiosInstance.patch(`/api/longrental-inquery/update`,
+                 {status, reply},
+                {
+                params:{
+                    inqueryID:inqueryID
+                }
+            })
+                .then(response => {
+                    dispatch(longrentInquerySuccess(response.data));
+                    window.location.reload();
+                })
+                .catch(error => {
+                    dispatch(longrentInqueryFailure(error.message));
+                });
+        };
+    }
+

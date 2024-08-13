@@ -2,15 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { viewEachLongrent, updateStatus } from '../../actions/longrentAction';
 import { useParams } from 'react-router-dom';
+import { Table, Select, Input, Button, Spin, Alert } from 'antd';
+
+const { Option } = Select;
 
 const ViewModel = React.memo(() => {
   const { adCode } = useParams();
   const dispatch = useDispatch();
-  
+
   const { data, loading, error } = useSelector((state) => state.longrent);
-  
+
   const [formDataArray, setFormDataArray] = useState([]);
-  
+
   useEffect(() => {
     dispatch(viewEachLongrent(adCode));
   }, [dispatch, adCode]);
@@ -28,8 +31,7 @@ const ViewModel = React.memo(() => {
     }
   }, [data]);
 
-  const handleInputChange = (e, id) => {
-    const { name, value } = e.target;
+  const handleInputChange = (value, name, id) => {
     setFormDataArray(prevState =>
       prevState.map(item =>
         item._id === id ? { ...item, [name]: value } : item
@@ -37,85 +39,116 @@ const ViewModel = React.memo(() => {
     );
   };
 
-  const handleSubmit = (e, id) => {
-    e.preventDefault();
+  const handleSubmit = (id) => {
     const formData = formDataArray.find(item => item._id === id);
     if (formData) {
       dispatch(updateStatus(adCode, formData.adminKeyStatus, formData.username, formData.monthlyRate, formData.advancePayment , id));
     }
   };
 
+  const columns = [
+    {
+      title: 'Username',
+      dataIndex: 'username',
+      key: 'username'
+    },
+    {
+      title: 'Ad Code',
+      dataIndex: 'adCode',
+      key: 'adCode',
+      render: () => adCode
+    },
+    {
+      title: 'Rental Start Date',
+      dataIndex: 'rentalStartDate',
+      key: 'rentalStartDate',
+      render: (_, record) => data.find(d => d._id === record._id)?.rentalStartDate
+    },
+    {
+      title: 'Rental End Date',
+      dataIndex: 'rentalEndDate',
+      key: 'rentalEndDate',
+      render: (_, record) => data.find(d => d._id === record._id)?.rentalEndDate
+    },
+    {
+      title: 'User Message',
+      dataIndex: 'userMessage',
+      key: 'userMessage',
+      render: (_, record) => data.find(d => d._id === record._id)?.userMessage
+    },
+    {
+      title: 'Phone Number',
+      dataIndex: 'phoneNumber',
+      key: 'phoneNumber',
+      render: (_, record) => data.find(d => d._id === record._id)?.phoneNumber
+    },
+    {
+      title: 'Admin Key Status',
+      dataIndex: 'adminKeyStatus',
+      key: 'adminKeyStatus',
+      render: (_, record) => (
+        <Select
+          defaultValue={record.adminKeyStatus || 'Pending'}
+          onChange={(value) => handleInputChange(value, 'adminKeyStatus', record._id)}
+        >
+          <Option value="Approved">Approved</Option>
+          <Option value="Rejected">Rejected</Option>
+          <Option value="Pending">Pending</Option>
+        </Select>
+      )
+    },
+    {
+      title: 'Monthly Rate',
+      dataIndex: 'monthlyRate',
+      key: 'monthlyRate',
+      render: (_, record) => (
+        <Input
+          type="number"
+          value={record.monthlyRate || ''}
+          onChange={(e) => handleInputChange(e.target.value, 'monthlyRate', record._id)}
+        />
+      )
+    },
+    {
+      title: 'Advance Payment',
+      dataIndex: 'advancePayment',
+      key: 'advancePayment',
+      render: (_, record) => (
+        <Input
+          type="number"
+          value={record.advancePayment || ''}
+          onChange={(e) => handleInputChange(e.target.value, 'advancePayment', record._id)}
+        />
+      )
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (_, record) => (
+        <Button onClick={() => handleSubmit(record._id)} type="primary">
+          Update
+        </Button>
+      )
+    }
+  ];
+
   if (loading) {
-    return <p>Loading...</p>;
+    return <Spin size="large" />;
   }
 
   if (error) {
-    return <p>Error: {error.message}</p>;
+    return <Alert message="Error" description={error.message} type="error" />;
   }
 
   return (
     <div className="p-4">
       {formDataArray.length > 0 ? (
-        formDataArray.map((item) => (
-          <div key={item._id} className="bg-white shadow-lg rounded-lg p-6 mb-4">
-            <ul>
-              <li className="mb-2"><strong>Username:</strong> {item.username}</li>
-              <li className="mb-2"><strong>Ad Code:</strong> {adCode}</li>
-              <li className="mb-2"><strong>Rental Start Date:</strong> {data.find(d => d._id === item._id)?.rentalStartDate}</li>
-              <li className="mb-2"><strong>Rental End Date:</strong> {data.find(d => d._id === item._id)?.rentalEndDate}</li>
-              <li className="mb-2"><strong>User Message:</strong> {data.find(d => d._id === item._id)?.userMessage}</li>
-              <li className="mb-2"><strong>Phone Number:</strong> {data.find(d => d._id === item._id)?.phoneNumber}</li>
-            </ul>
-            
-            <form onSubmit={(e) => handleSubmit(e, item._id)} className="mt-4">
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-1" htmlFor={`adminKeyStatus-${item._id}`}>Admin Key Status</label>
-                <select
-                  id={`adminKeyStatus-${item._id}`}
-                  name="adminKeyStatus"
-                  className="p-2 border rounded w-full"
-                  value={item.adminKeyStatus || ''}
-                  onChange={(e) => handleInputChange(e, item._id)}
-                >
-                  <option value="Approved">Approved</option>
-                  <option value="Rejected">Rejected</option>
-                  <option value="Pending">Pending</option>
-                </select>
-              </div>
-              
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-1" htmlFor={`monthlyRate-${item._id}`}>Monthly Rate</label>
-                <input
-                  id={`monthlyRate-${item._id}`}
-                  name="monthlyRate"
-                  type="number"
-                  className="p-2 border rounded w-full"
-                  value={item.monthlyRate || ''}
-                  onChange={(e) => handleInputChange(e, item._id)}
-                />
-              </div>
-              
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-1" htmlFor={`advancePayment-${item._id}`}>Advance Payment</label>
-                <input
-                  id={`advancePayment-${item._id}`}
-                  name="advancePayment"
-                  type="number"
-                  className="p-2 border rounded w-full"
-                  value={item.advancePayment || ''}
-                  onChange={(e) => handleInputChange(e, item._id)}
-                />
-              </div>
-              
-              <button
-                type="submit"
-                className="bg-blue-500 text-white px-4 py-2 rounded"
-              >
-                Update
-              </button>
-            </form>
-          </div>
-        ))
+        <Table
+          dataSource={formDataArray}
+          columns={columns}
+          rowKey="_id"
+          pagination={false}
+        />
       ) : (
         <p>No data available.</p>
       )}
