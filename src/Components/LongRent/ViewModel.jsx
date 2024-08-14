@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { viewEachLongrent, updateStatus } from '../../actions/longrentAction';
 import { useParams } from 'react-router-dom';
 import { Table, Select, Input, Button, Spin, Alert } from 'antd';
+import { DollarOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 
@@ -97,16 +98,20 @@ const ViewModel = React.memo(() => {
         </Select>
       )
     },
-    {
+        {
       title: 'Monthly Rate',
       dataIndex: 'monthlyRate',
       key: 'monthlyRate',
       render: (_, record) => (
-        <Input
-          type="number"
-          value={record.monthlyRate || ''}
-          onChange={(e) => handleInputChange(e.target.value, 'monthlyRate', record._id)}
-        />
+        <Input.Group compact>
+          <Input
+            style={{ width: '150px', height: '40px' }}
+            prefix={<DollarOutlined />}
+            type="number"
+            value={record.monthlyRate || ''}
+            onChange={(e) => handleInputChange(e.target.value, 'monthlyRate', record._id)}
+          />
+        </Input.Group>
       )
     },
     {
@@ -114,11 +119,15 @@ const ViewModel = React.memo(() => {
       dataIndex: 'advancePayment',
       key: 'advancePayment',
       render: (_, record) => (
-        <Input
-          type="number"
-          value={record.advancePayment || ''}
-          onChange={(e) => handleInputChange(e.target.value, 'advancePayment', record._id)}
-        />
+        <Input.Group compact>
+          <Input
+            style={{ width: '150px', height: '40px' }}
+            prefix={<DollarOutlined />}
+            type="number"
+            value={record.advancePayment || ''}
+            onChange={(e) => handleInputChange(e.target.value, 'advancePayment', record._id)}
+          />
+        </Input.Group>
       )
     },
     {

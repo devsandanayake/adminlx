@@ -47,7 +47,7 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gray-800 text-white w-64 fixed">
+    <div className="h-screen flex flex-col bg-gray-800 text-white w-64 fixed z-20">
       <div className="p-4 text-lg font-bold flex items-center">
         <span className="mt-2">Admin Panel</span>
         <div className="ml-14">
