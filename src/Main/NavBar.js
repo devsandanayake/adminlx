@@ -108,7 +108,7 @@ export default function Sidebar() {
                   className="hover:text-gray-300 hover:scale-105 transform transition duration-300 flex items-center"
                   to="/"
                 >
-                  Short Term Rent
+                  Short Term Rent Inquiry
                 </Link>
                 <Link
                   className="hover:text-gray-300 hover:scale-105 transform transition duration-300 flex items-center"
@@ -152,7 +152,7 @@ export default function Sidebar() {
                   className="hover:text-gray-300 hover:scale-105 transform transition duration-300 flex items-center"
                   to="/rentInquiry/sub2"
                 >
-                  Long Term Rent Inquiry
+                  Long Term Rent 
                   {localStorage.getItem('pendingLRCount') > 0 && (
                     <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
                       {localStorage.getItem('pendingLRCount')}

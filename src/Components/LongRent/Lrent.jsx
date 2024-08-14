@@ -2,6 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { longrentGet } from '../../actions/longrentAction';
 import { fetchData } from '../../actions/postAction';
+import { Table, Button, Badge } from 'antd';
 
 export default function Lrent() {
   const dispatch = useDispatch();
@@ -23,33 +24,54 @@ export default function Lrent() {
     dispatch(fetchData());
   }, [dispatch]);
 
+  const columns = [
+    {
+      title: 'Title',
+      dataIndex: 'title',
+      key: 'title',
+    },
+    {
+      title: 'Pending Count',
+      dataIndex: 'pendingCount',
+      key: 'pendingCount',
+      render: (text) => (
+        <Badge count={text} style={{ backgroundColor: '#f5222d' }} />
+      ),
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (_, record) => (
+        <Button
+          type="primary"
+          onClick={() => window.location = `/viewLongrent/${record.adCode}`}
+        >
+          View
+        </Button>
+      ),
+    },
+  ];
+
+  const dataSource = LongrentData.map((item) => {
+    const pendingCount = longrentState.data.filter(
+      (lrItem) => lrItem.adCode === item.adCode && lrItem.adminKeyStatus === "Pending"
+    ).length;
+    return {
+      key: item.id,
+      title: item.title,
+      pendingCount: pendingCount,
+      adCode: item.adCode,
+    };
+  });
+
   return (
     <>
       <h1 className="text-2xl font-bold mb-4">Long Rent</h1>
-      <div className="grid grid-cols-1 gap-4">
-        {LongrentData.map((item) => {
-          const pendingCount = longrentState.data.filter(
-            (lrItem) => lrItem.adCode === item.adCode && lrItem.adminKeyStatus === "Pending"
-          ).length;
-          return (
-            <div key={item.id} className="relative p-4 bg-white rounded-lg shadow-md w-1/4">
-              {pendingCount > 0 && (
-                <div className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
-                  {pendingCount}
-                </div>
-              )}
-              <h2 className="text-lg font-semibold">{item.title}</h2>
-              <p className="text-sm">Pending Count: {pendingCount}</p>
-              <button
-                className="mt-2 px-4 py-2 text-sm text-white bg-blue-500 rounded hover:bg-blue-600"
-                onClick={() => window.location = `/viewLongrent/${item.adCode}`}
-              >
-                View
-              </button>
-            </div>
-          );
-        })}
-      </div>
+      <Table
+        dataSource={dataSource}
+        columns={columns}
+        pagination={false}
+      />
     </>
   );
 }

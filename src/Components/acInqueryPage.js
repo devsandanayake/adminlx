@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getInquery, replyInquery } from '../actions/inqueryAction';
+import { Table, Button, Input, Badge } from 'antd';
 
 export default function AcInqueryPage() {
   const dispatch = useDispatch();
@@ -8,12 +9,12 @@ export default function AcInqueryPage() {
   const [replyMessages, setReplyMessages] = useState({});
   const [activeTab, setActiveTab] = useState('Pending');
   const [inquiryCount, setInquiryCount] = useState(0);
+
   const fetchInquiryCount = () => {
     // Simulate an API call or get from localStorage
     const count = localStorage.getItem('inqueryCount') || 0;
     setInquiryCount(count);
   };
-
 
   useEffect(() => {
     fetchInquiryCount();
@@ -41,94 +42,120 @@ export default function AcInqueryPage() {
     }));
   };
 
- 
   if (inqueryState.error) {
     return <p>Error: {inqueryState.error}</p>;
   }
 
-  const renderInquiries = (status) => (
-    Array.isArray(inqueryState.data) && inqueryState.data
-      .filter(inquery => inquery.replyStatus === status)
-      .map((inquery, index) => (
-        <div key={index} className="bg-white shadow-md rounded-lg p-4">
-          <div className="mb-2">
-            <span className="font-bold">Username:</span> {inquery.username}
-          </div>
-          <div className="mb-2">
-            <span className="font-bold">Inquiry ID:</span> {inquery.inqueryID}
-          </div>
-          <div className="mb-2">
-            <span className="font-bold">Auction ID:</span> {inquery.auctionID}
-          </div>
-          <div className="mb-2">
-            <span className="font-bold">Message:</span> {inquery.message}
-          </div>
-          <div className="mb-2">
-            <span className="font-bold">Number:</span> {inquery.number}
-          </div>
-          <div className="mb-2">
-            <span className="font-bold">Reply Status:</span> 
-            <span className={`ml-2 px-2 py-1 rounded ${inquery.replyStatus === 'Pending' ? 'bg-red-500 text-white' : 'bg-green-500 text-white'}`}>
-              {inquery.replyStatus}
-            </span>
-          </div>
-          <div className="mb-2">
-            <span className="font-bold">Reply Message:</span>
-            {inquery.replyStatus === 'Pending' ? (
-              <form onSubmit={(e) => { e.preventDefault(); handleReply(inquery.inqueryID, replyMessages[inquery.inqueryID]); }}>
-                <input
-                  type="text"
-                  name="replyMessage"
-                  value={replyMessages[inquery.inqueryID] || ''}
-                  onChange={(e) => handleInputChange(inquery.inqueryID, e.target.value)}
-                  className="border border-gray-300 rounded px-2 py-1 w-full mt-2"
-                  placeholder="Type your reply here"
-                  required
-                />
-                <button
-                  type="submit"
-                  className="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                >
-                  Send
-                </button>
-              </form>
-            ) : (
-              <p className="mt-2">{inquery.reply}</p>
-            )}
-          </div>
-        </div>
-      ))
-  );
+  const columns = [
+    {
+      title: 'Username',
+      dataIndex: 'username',
+      key: 'username',
+    },
+    {
+      title: 'Inquiry ID',
+      dataIndex: 'inqueryID',
+      key: 'inqueryID',
+    },
+    {
+      title: 'Auction ID',
+      dataIndex: 'auctionID',
+      key: 'auctionID',
+    },
+    {
+      title: 'Message',
+      dataIndex: 'message',
+      key: 'message',
+    },
+    {
+      title: 'Number',
+      dataIndex: 'number',
+      key: 'number',
+    },
+    {
+      title: 'Reply Status',
+      dataIndex: 'replyStatus',
+      key: 'replyStatus',
+      render: (text) => (
+        <Badge
+          count={text}
+          style={{ backgroundColor: text === 'Pending' ? '#f5222d' : '#52c41a' }}
+        />
+      ),
+    },
+    {
+      title: 'Reply Message',
+      key: 'replyMessage',
+      render: (_, record) => (
+        record.replyStatus === 'Pending' ? (
+          <form onSubmit={(e) => { e.preventDefault(); handleReply(record.inqueryID, replyMessages[record.inqueryID]); }}>
+            <Input
+              type="text"
+              name="replyMessage"
+              value={replyMessages[record.inqueryID] || ''}
+              onChange={(e) => handleInputChange(record.inqueryID, e.target.value)}
+              placeholder="Type your reply here"
+              required
+            />
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="mt-2"
+            >
+              Send
+            </Button>
+          </form>
+        ) : (
+          <p>{record.reply}</p>
+        )
+      ),
+    },
+  ];
+
+  const dataSource = Array.isArray(inqueryState.data) ? inqueryState.data
+    .filter(inquery => inquery.replyStatus === activeTab)
+    .map((inquery, index) => ({
+      key: index,
+      username: inquery.username,
+      inqueryID: inquery.inqueryID,
+      auctionID: inquery.auctionID,
+      message: inquery.message,
+      number: inquery.number,
+      replyStatus: inquery.replyStatus,
+      reply: inquery.reply,
+    })) : [];
 
   return (
-    
     <div className="p-4">
-        <h1 className="text-2xl font-semibold">Inquiry</h1>
+      <h1 className="text-2xl font-semibold">Inquiry</h1>
       <p className="text-gray-600 cursor-pointer">
         Home / <span className="cursor-pointer">Inquiry</span>
       </p>
       <div className="mt-4">
-        <button
-          className={`mr-4 px-4 py-2 rounded ${activeTab === 'Pending' ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+        <Button
+          type={activeTab === 'Pending' ? 'primary' : 'default'}
           onClick={() => setActiveTab('Pending')}
+          className="mr-4"
         >
           Pending
           {inquiryCount > 0 && (
-                  <span className="absolute -mt-4 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
-                    {inquiryCount}
-                  </span>
-                )}
-        </button>
-        <button
-          className={`px-4 py-2 rounded ${activeTab === 'Replied' ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+            <span className="absolute -mt-9 ml-12 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
+              {inquiryCount}
+            </span>
+          )}
+        </Button>
+        <Button
+          type={activeTab === 'Replied' ? 'primary' : 'default'}
           onClick={() => setActiveTab('Replied')}
         >
           Replied
-        </button>
+        </Button>
       </div>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {activeTab === 'Pending' ? renderInquiries('Pending') : renderInquiries('Replied')}
-      </div>
+      <Table
+        dataSource={dataSource}
+        columns={columns}
+        pagination={false}
+      />
     </div>
   );
 }

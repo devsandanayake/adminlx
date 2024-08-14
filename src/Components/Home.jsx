@@ -2,10 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from '../actions/postAction';
 import { approvelPost } from '../actions/approvelAction';
-import { FaHome, FaBuilding, FaExchangeAlt, FaGavel } from 'react-icons/fa';
-import { FaHourglassHalf, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
-import { FaCheck, FaTimes } from 'react-icons/fa';
-
+import { FaHome, FaBuilding, FaExchangeAlt, FaGavel, FaHourglassHalf, FaCheckCircle, FaTimesCircle, FaCheck, FaTimes } from 'react-icons/fa';
+import { Table, Button, Badge } from 'antd';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -17,54 +15,68 @@ const App = () => {
     dispatch(fetchData());
   }, [dispatch]);
 
-  
-   
   const pendingCount = dataState.data.filter((post) => post.status === 0 && parseInt(post.transactionType) === 1).length;
 
-  const renderPosts = (status) => {
-    return dataState.data
-      .filter((post) => post.status === status && parseInt(post.transactionType) === transactionType)
-      .map((post) => (
-                    
-            
-            <button className='p-2 w-72' onClick={() => {
-              window.location = `/adsPage/view/${post.adCode}`;  
-            }}>
-              <li key={post.id} className="bg-white p-4 rounded shadow-lg  justify-between items-center w-72 h-40">
-                <div>
-                  <h3 className="text-sm font-semibold">{post.title}</h3>
-                  <p className={`mt-2 text-sm ${post.status === 1 ? 'text-green-500' : post.status === 2 ? 'text-red-500' : 'text-yellow-500'}`}>
-                    {post.status === 1 ? 'Approved' : post.status === 2 ? 'Rejected' : 'Pending'}
-                  </p>
-                </div>
-                <div className="flex space-x-2">
-                  {activeTab !== 'approved' && (
-                    <button
-                      className="bg-green-500 text-white py-1 px-3 rounded hover:bg-green-600 shadow-md flex items-center"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        dispatch(approvelPost(post.adCode, 1));
-                      }}
-                    >
-                      <FaCheck className="mr-1" />
-                      Approve
-                    </button>
-                  )}
-                  <button
-                    className="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 shadow-md flex items-center"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      dispatch(approvelPost(post.adCode, 2));
-                    }}
-                  >
-                    <FaTimes className="mr-1" />
-                    Reject
-                  </button>
-                </div>
-              </li>
-            </button>
-      ));
+  const handleApproval = (adCode, status) => {
+    dispatch(approvelPost(adCode, status));
   };
+
+  const columns = [
+    {
+      title: 'Title',
+      dataIndex: 'title',
+      key: 'title',
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      render: (status) => (
+        <span className={`text-sm ${status === 1 ? 'text-green-500' : status === 2 ? 'text-red-500' : 'text-yellow-500'}`}>
+          {status === 1 ? 'Approved' : status === 2 ? 'Rejected' : 'Pending'}
+        </span>
+      ),
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      render: (_, record) => (
+        <div className="flex space-x-2">
+          {activeTab !== 'approved' && (
+            <Button
+              type="primary"
+              icon={<FaCheck />}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleApproval(record.adCode, 1);
+              }}
+            >
+              Approve
+            </Button>
+          )}
+          <Button
+            type="danger"
+            icon={<FaTimes />}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleApproval(record.adCode, 2);
+            }}
+          >
+            Reject
+          </Button>
+        </div>
+      ),
+    },
+  ];
+
+  const dataSource = dataState.data
+    .filter((post) => post.status === (activeTab === 'pending' ? 0 : activeTab === 'approved' ? 1 : 2) && parseInt(post.transactionType) === transactionType)
+    .map((post, index) => ({
+      key: index,
+      title: post.title,
+      status: post.status,
+      adCode: post.adCode,
+    }));
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
@@ -74,66 +86,72 @@ const App = () => {
       {dataState.error && <p className="text-red-600">Error: {dataState.error}</p>}
 
       <div className="flex space-x-4 mb-4">
-          <button
-            className={`flex items-center py-2 px-4 rounded ${transactionType === 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-            onClick={() => setTractionType(1)}
-          >
-            <FaHome className="mr-2" />
-            Short Term Rent
-          </button>
-          <button
-            className={`flex items-center py-2 px-4 rounded ${transactionType === 2 ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-            onClick={() => setTractionType(2)}
-          >
-            <FaBuilding className="mr-2" />
-            Long Term Rent
-          </button>
-          <button
-            className={`flex items-center py-2 px-4 rounded ${transactionType === 3 ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-            onClick={() => setTractionType(3)}
-          >
-            <FaExchangeAlt className="mr-2" />
-            Short Term/Long Term
-          </button>
-          <button
-            className={`flex items-center py-2 px-4 rounded ${transactionType === 4 ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-            onClick={() => setTractionType(4)}
-          >
-            <FaGavel className="mr-2" />
-            Auction
-          </button>
-        </div>
+        <Button
+          type={transactionType === 1 ? 'primary' : 'default'}
+          icon={<FaHome />}
+          onClick={() => setTractionType(1)}
+        >
+          Short Term Rent
+        </Button>
+        <Button
+          type={transactionType === 2 ? 'primary' : 'default'}
+          icon={<FaBuilding />}
+          onClick={() => setTractionType(2)}
+        >
+          Long Term Rent
+        </Button>
+        <Button
+          type={transactionType === 3 ? 'primary' : 'default'}
+          icon={<FaExchangeAlt />}
+          onClick={() => setTractionType(3)}
+        >
+          Short Term/Long Term
+        </Button>
+        <Button
+          type={transactionType === 4 ? 'primary' : 'default'}
+          icon={<FaGavel />}
+          onClick={() => setTractionType(4)}
+        >
+          Auction
+        </Button>
+      </div>
 
-        <div className="flex space-x-4 mb-4">
-  <button
-    className={`flex items-center py-2 px-4 rounded ${activeTab === 'pending' ? 'bg-yellow-500 text-white' : 'bg-gray-200'}`}
-    onClick={() => setActiveTab('pending')}
-  >
-    <FaHourglassHalf className="mr-2" />
-    Pending
-    {pendingCount > 0 && <span className="bg-red-500 text-white rounded-full px-2 ml-2">{pendingCount}</span>}
-  </button>
-  <button
-    className={`flex items-center py-2 px-4 rounded ${activeTab === 'approved' ? 'bg-green-500 text-white' : 'bg-gray-200'}`}
-    onClick={() => setActiveTab('approved')}
-  >
-    <FaCheckCircle className="mr-2" />
-    Approved
-  </button>
-  <button
-    className={`flex items-center py-2 px-4 rounded ${activeTab === 'rejected' ? 'bg-red-500 text-white' : 'bg-gray-200'}`}
-    onClick={() => setActiveTab('rejected')}
-  >
-    <FaTimesCircle className="mr-2" />
-    Rejected
-  </button>
-</div>
+      <div className="flex space-x-4 mb-4">
+        <Button
+          type={activeTab === 'pending' ? 'primary' : 'default'}
+          icon={<FaHourglassHalf />}
+          onClick={() => setActiveTab('pending')}
+        >
+          Pending
+          {pendingCount > 0 && <Badge count={pendingCount} style={{ backgroundColor: '#f5222d' }} />}
+        </Button>
+        <Button
+          type={activeTab === 'approved' ? 'primary' : 'default'}
+          icon={<FaCheckCircle />}
+          onClick={() => setActiveTab('approved')}
+        >
+          Approved
+        </Button>
+        <Button
+          type={activeTab === 'rejected' ? 'primary' : 'default'}
+          icon={<FaTimesCircle />}
+          onClick={() => setActiveTab('rejected')}
+        >
+          Rejected
+        </Button>
+      </div>
 
-      <ul className="space-y-4">
-        {activeTab === 'pending' && renderPosts(0)}
-        {activeTab === 'approved' && renderPosts(1)}
-        {activeTab === 'rejected' && renderPosts(2)}
-      </ul>
+      <Table
+        className='cursor-pointer'
+        dataSource={dataSource}
+        columns={columns}
+        pagination={false}
+        onRow={(record) => ({
+          onClick: () => {
+            window.location = `/adsPage/view/${record.adCode}`;
+          },
+        })}
+      />
     </div>
   );
 };
