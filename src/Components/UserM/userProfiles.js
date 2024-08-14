@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser } from '../../actions/userAction';
+import { Table, Button, Tabs, Tag } from 'antd';
+
+const { TabPane } = Tabs;
 
 export default function UserProfiles() {
   const dispatch = useDispatch();
@@ -16,70 +19,80 @@ export default function UserProfiles() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
+  const handleTabChange = (key) => {
+    setActiveTab(key);
   };
+
+  const columns = [
+    {
+      title: 'Username',
+      dataIndex: 'username',
+      key: 'username',
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+    },
+    {
+      title: 'Role',
+      dataIndex: 'role',
+      key: 'role',
+      render: (role) => (
+        <Tag color={role === 'admin' ? 'volcano' : 'geekblue'}>
+          {role.toUpperCase()}
+        </Tag>
+      ),
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      render: (_, user) => (
+        <div className="flex space-x-2">
+          {activeTab === 'user' && (
+            <>
+              <Button
+                type="primary"
+                onClick={() => window.location = `/userAds/${user.username}`}
+              >
+                View Advertisements
+              </Button>
+              <Button
+                type="default"
+                onClick={() => window.location = `/userAuctions/${user.username}`}
+              >
+                View Auction Details
+              </Button>
+              <Button
+                type="danger"
+                onClick={() => window.location = `/userInquiries/${user.username}`}
+              >
+                View Inquiry
+              </Button>
+            </>
+          )}
+        </div>
+      ),
+    },
+  ];
+
+  const filteredData = userState.data.filter((user) => 
+    activeTab === 'user' ? user.role !== 'admin' : user.role === 'admin'
+  );
 
   return (
     <div className="container mx-auto mt-8">
       <h1 className="text-3xl font-bold mb-6 text-center">User Profiles</h1>
-      <div className="flex justify-center mb-6">
-        <button
-          onClick={() => handleTabChange('user')}
-          className={`px-4 py-2 mx-2 font-semibold rounded-lg ${
-            activeTab === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200'
-          }`}
-        >
-          Registered Users
-        </button>
-        <button
-          onClick={() => handleTabChange('admin')}
-          className={`px-4 py-2 mx-2 font-semibold rounded-lg ${
-            activeTab === 'admin' ? 'bg-blue-500 text-white' : 'bg-gray-200'
-          }`}
-        >
-          Admin Accounts
-        </button>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {userState.data
-          .filter((user) => (activeTab === 'user' ? user.role !== 'admin' : user.role === 'admin'))
-          .map((user, index) => (
-            <div key={index} className="bg-white shadow-lg rounded-lg p-6">
-              <div className="mb-4">
-                <span className="font-bold">Username:</span> {user.username}
-              </div>
-              <div className="mb-4">
-                <span className="font-bold">Email:</span> {user.email}
-              </div>
-              {activeTab === 'admin' && (
-              <div className="mb-4">
-                <span className="font-bold">Role:</span> {user.role}
-              </div>
-              )}
-
-              {activeTab === 'user' && (
-                <div className="flex justify-end space-x-2">
-                  <button className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition duration-200"
-                  onClick={()=>{
-                    const handleClick = ()=>{
-                      window.location = `/userAds/${user.username}`;
-                    }
-                    handleClick();
-                  }}>
-                    View Advertisements
-                  </button>
-                  <button className="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition duration-200">
-                    View Auction Details
-                  </button>
-                  <button className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition duration-200">
-                    View Inquiry
-                  </button>
-                </div>
-              )}
-            </div>
-          ))}
-      </div>
+      <Tabs defaultActiveKey="user" onChange={handleTabChange} centered>
+        <TabPane tab="Registered Users" key="user" />
+        <TabPane tab="Admin Accounts" key="admin" />
+      </Tabs>
+      <Table
+        dataSource={filteredData}
+        columns={columns}
+        rowKey="username"
+        pagination={false}
+      />
     </div>
   );
 }
