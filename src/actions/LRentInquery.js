@@ -25,6 +25,8 @@ export const getLongrentInquery = () => {
         axiosInstance.get('/api/longrental-inquery/all')
         .then(response => {
             dispatch(longrentInquerySuccess(response.data));
+            //pending count save in local storage
+            localStorage.setItem('LRpendingCount', response.data.filter((item) => item.replyStatus === 'Pending').length);
         })
         .catch(error => {
             dispatch(longrentInqueryFailure(error.message));

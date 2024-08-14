@@ -18,4 +18,20 @@ axiosInstance.interceptors.request.use(
   }
 );
 
+
+// Response interceptor to handle token expiration
+axiosInstance.interceptors.response.use(
+  (response)=>{
+    return response;
+  },
+  (error)=>{
+    if(error.response.status === 401){
+      alert('Session expired. Please login again');
+      localStorage.removeItem('token');
+      window.location = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default axiosInstance;
