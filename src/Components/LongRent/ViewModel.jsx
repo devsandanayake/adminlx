@@ -54,6 +54,13 @@ const ViewModel = React.memo(() => {
       key: 'username'
     },
     {
+      title: 'BookingID',
+      dataIndex: 'BookingID',
+      key: 'BookingID',
+      render: (_, record) => data.find(d => d._id === record._id)?.BookingID
+
+    },
+    {
       title: 'Ad Code',
       dataIndex: 'adCode',
       key: 'adCode',
