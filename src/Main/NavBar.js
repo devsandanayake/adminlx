@@ -82,7 +82,7 @@ export default function Sidebar() {
               to="/acInquery"
             >
               <FaInbox className="mr-2" />
-              Inquiries
+              Auction Inquiries
               {inquiryCount > 0 && (
                 <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
                   {inquiryCount}
