@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { viewInqueries, replyInquery } from '../../actions/inqueryAction';
+import { Table, Button, Tabs, Tag, Input, Form, Spin, Alert } from 'antd';
+
+const { TabPane } = Tabs;
 
 export default function AcInqueryPage() {
   const dispatch = useDispatch();
@@ -32,86 +35,94 @@ export default function AcInqueryPage() {
   };
 
   if (inqueryState.loading) {
-    return <p>Loading...</p>;
+    return <Spin tip="Loading..." />;
   }
 
   if (inqueryState.error) {
-    return <p>Error: {inqueryState.error}</p>;
+    return <Alert message="Error" description={inqueryState.error} type="error" showIcon />;
   }
 
-  const renderInquiries = (status) => (
-    Array.isArray(inqueryState.data) && inqueryState.data
-      .filter(inquery => inquery.replyStatus === status)
-      .map((inquery, index) => (
-        <div key={index} className="bg-white shadow-md rounded-lg p-4">
-          <div className="mb-2">
-            <span className="font-bold">Username:</span> {inquery.username}
-          </div>
-          <div className="mb-2">
-            <span className="font-bold">Inquiry ID:</span> {inquery.inqueryID}
-          </div>
-          <div className="mb-2">
-            <span className="font-bold">Auction ID:</span> {inquery.auctionID}
-          </div>
-          <div className="mb-2">
-            <span className="font-bold">Message:</span> {inquery.message}
-          </div>
-          <div className="mb-2">
-            <span className="font-bold">Number:</span> {inquery.number}
-          </div>
-          <div className="mb-2">
-            <span className="font-bold">Reply Status:</span> 
-            <span className={`ml-2 px-2 py-1 rounded ${inquery.replyStatus === 'Pending' ? 'bg-red-500 text-white' : 'bg-green-500 text-white'}`}>
-              {inquery.replyStatus}
-            </span>
-          </div>
-          <div className="mb-2">
-            <span className="font-bold">Reply Message:</span>
-            {inquery.replyStatus === 'Pending' ? (
-              <form onSubmit={(e) => { e.preventDefault(); handleReply(inquery.inqueryID, replyMessages[inquery.inqueryID]); }}>
-                <input
-                  type="text"
-                  name="replyMessage"
-                  value={replyMessages[inquery.inqueryID] || ''}
-                  onChange={(e) => handleInputChange(inquery.inqueryID, e.target.value)}
-                  className="border border-gray-300 rounded px-2 py-1 w-full mt-2"
-                  placeholder="Type your reply here"
-                  required
-                />
-                <button
-                  type="submit"
-                  className="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                >
-                  Send
-                </button>
-              </form>
-            ) : (
-              <p className="mt-2">{inquery.reply}</p>
-            )}
-          </div>
-        </div>
-      ))
-  );
+  const columns = [
+    {
+      title: 'Username',
+      dataIndex: 'username',
+      key: 'username',
+    },
+    {
+      title: 'Inquiry ID',
+      dataIndex: 'inqueryID',
+      key: 'inqueryID',
+    },
+    {
+      title: 'Auction ID',
+      dataIndex: 'auctionID',
+      key: 'auctionID',
+    },
+    {
+      title: 'Message',
+      dataIndex: 'message',
+      key: 'message',
+    },
+    {
+      title: 'Number',
+      dataIndex: 'number',
+      key: 'number',
+    },
+    {
+      title: 'Reply Status',
+      dataIndex: 'replyStatus',
+      key: 'replyStatus',
+      render: (replyStatus) => (
+        <Tag color={replyStatus === 'Pending' ? 'red' : 'green'}>
+          {replyStatus}
+        </Tag>
+      ),
+    },
+    {
+      title: 'Reply Message',
+      key: 'replyMessage',
+      render: (_, inquery) => (
+        inquery.replyStatus === 'Pending' ? (
+          <Form
+            onFinish={() => handleReply(inquery.inqueryID, replyMessages[inquery.inqueryID])}
+          >
+            <Form.Item>
+              <Input
+                type="text"
+                value={replyMessages[inquery.inqueryID] || ''}
+                onChange={(e) => handleInputChange(inquery.inqueryID, e.target.value)}
+                placeholder="Type your reply here"
+                required
+              />
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                Send
+              </Button>
+            </Form.Item>
+          </Form>
+        ) : (
+          <p>{inquery.reply}</p>
+        )
+      ),
+    },
+  ];
+
+  const filteredData = inqueryState.data.filter(inquery => inquery.replyStatus === activeTab);
 
   return (
-    <div className="p-4">
-      <div className="mb-4">
-        <button
-          className={`mr-4 px-4 py-2 rounded ${activeTab === 'Pending' ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
-          onClick={() => setActiveTab('Pending')}
-        >
-          Pending
-        </button>
-        <button
-          className={`px-4 py-2 rounded ${activeTab === 'Replied' ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
-          onClick={() => setActiveTab('Replied')}
-        >
-          Replied
-        </button>
-      </div>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {activeTab === 'Pending' ? renderInquiries('Pending') : renderInquiries('Replied')}
-      </div>
+    <div className="container mx-auto mt-8">
+      <h1 className="text-3xl font-bold mb-6 text-center">Inquiries</h1>
+      <Tabs defaultActiveKey="Pending" onChange={setActiveTab} centered>
+        <TabPane tab="Pending" key="Pending" />
+        <TabPane tab="Replied" key="Replied" />
+      </Tabs>
+      <Table
+        dataSource={filteredData}
+        columns={columns}
+        rowKey="inqueryID"
+        pagination={false}
+      />
     </div>
   );
 }
