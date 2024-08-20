@@ -42,12 +42,23 @@ export default function Lrent() {
       title: 'Action',
       key: 'action',
       render: (_, record) => (
-        <Button
+        <>
+          <Button
           type="primary"
           onClick={() => window.location = `/viewLongrent/${record.adCode}`}
         >
           View
         </Button>
+
+         <Button
+         type="secondary"
+         onClick={() => window.location = `/charges/${record.adCode}`}
+         style={{ marginLeft: '10px' }} // Add some space between buttons
+       >
+         ChargingRate
+       </Button>
+        </>
+        
       ),
     },
   ];

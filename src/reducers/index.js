@@ -7,6 +7,7 @@ import auctionReducer from './auctionReducer';
 import userReducer from './userReducer';
 import longrentReducer from './longrentReducer';
 import LRentInqueryReducer from './LRentInqueryReducer';
+import chargingReducer from './ChargingReducer';
  
 const rootReducer = combineReducers({
     data: dataReducer,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
     approvel: approvelReducer,
     longrent: longrentReducer,
     LRentInquery: LRentInqueryReducer,
+    charging: chargingReducer,
 
 });
 

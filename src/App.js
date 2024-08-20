@@ -15,6 +15,7 @@ import Dashboard from './Components/Dashboard/Dashboard';
 import Lrent from './Components/LongRent/Lrent';
 import ViewModel from './Components/LongRent/ViewModel';
 import LRinquery from './Components/LongRent/LRinquery';
+import Charges from './Components/LongRent/Charges';
 
 function App() {
   const authState = useSelector(state => state.auth);
@@ -45,6 +46,7 @@ function App() {
         <Route path="/rentInquiry/sub2" element={<Lrent />} />
         <Route path="/viewLongrent/:adCode" element={<ViewModel/>} />
         <Route path="/LrentInquiry" element={<LRinquery />} />
+        <Route path="/charges/:adCode" element={<Charges />} />
       </Routes>
       </Layout>
     </Router>

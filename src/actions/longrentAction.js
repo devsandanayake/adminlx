@@ -48,6 +48,7 @@ export const viewEachLongrent = (adCode) => {
     };
 }
 
+
 export const updateStatus = (adCode, adminKeyStatus,username,monthlyRate,advancePayment,id) => {
     return (dispatch) => {
         dispatch(longrentRequest());
