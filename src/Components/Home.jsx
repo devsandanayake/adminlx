@@ -13,12 +13,15 @@ const App = () => {
 
   useEffect(() => {
     dispatch(fetchData());
-  }, [dispatch]);
+  }, [dispatch,dataState.data]);
 
   const pendingCount = dataState.data.filter((post) => post.status === 0 && parseInt(post.transactionType) === 1).length;
 
   const handleApproval = (adCode, status) => {
-    dispatch(approvelPost(adCode, status));
+      const isConfirmed = window.confirm('Are you sure you want to update the status?');
+      if (isConfirmed) {
+          dispatch(approvelPost(adCode, status));
+      }
   };
 
   const columns = [
