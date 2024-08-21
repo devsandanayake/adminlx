@@ -8,12 +8,15 @@ import { Table, Button, Badge } from 'antd';
 const App = () => {
   const dispatch = useDispatch();
   const dataState = useSelector((state) => state.data);
+  const updateSucess = useSelector((state) => state.approvel);
   const [activeTab, setActiveTab] = useState('pending');
   const [transactionType, setTractionType] = useState(1); // 1: Rent, 2: Short Term Rent, 3: Auction
 
+  console.log(updateSucess);
+
   useEffect(() => {
     dispatch(fetchData());
-  }, [dispatch,dataState.data]);
+  }, [dispatch, updateSucess]);
 
   const pendingCount = dataState.data.filter((post) => post.status === 0 && parseInt(post.transactionType) === 1).length;
 

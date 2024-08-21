@@ -8,6 +8,7 @@ const initialState = {
     loading: false,
     data: [],
     error: '',
+    updateSucess: false,
 };
 
 const approvelReducer = (state = initialState, action) => {
@@ -22,6 +23,7 @@ const approvelReducer = (state = initialState, action) => {
                 loading: false,
                 data: action.payload,
                 error: '',
+                updateSucess: true,
             };
         case APPROVEL_FAILURE:
             return {
