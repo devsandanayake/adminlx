@@ -42,9 +42,9 @@ export default function Charges() {
   ];
 
   const dataSource = selectedPrice?.details.flatMap((detail) =>
-    Array.from({ length: detail.endmonth - detail.startmonth + 1 }, (_, i) => ({
-      key: `${selectedPrice.year}-${i + detail.startmonth}`,
-      month: `${i + detail.startmonth}/${selectedPrice.year}`,
+    Array.from({ length: detail.endMonth - detail.startMonth + 1 }, (_, i) => ({
+      key: `${selectedPrice.year}-${i + detail.startMonth}`,
+      month: `${i + detail.startMonth}/${selectedPrice.year}`,
       price: `$${detail.price}`,
     }))
   );
