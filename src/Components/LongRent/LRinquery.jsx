@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Table, Button, Modal, Select, Input } from 'antd';
+import { Table, Button, Modal, Select, Input, Tabs } from 'antd';
 import { getLongrentInquery, updateInqueryStatus } from '../../actions/LRentInquery';
 
 const { Option } = Select;
+const { TabPane } = Tabs;
 
 const AlertPopup = ({ message, onClose }) => (
   <Modal
@@ -26,6 +27,7 @@ export default function LRinquery() {
   const [isRejectModalVisible, setIsRejectModalVisible] = useState(false);
   const [currentInqueryID, setCurrentInqueryID] = useState(null);
   const [replyMessage, setReplyMessage] = useState('');
+  const [activeTab, setActiveTab] = useState('Pending');
 
   React.useEffect(() => {
     dispatch(getLongrentInquery());
@@ -135,11 +137,19 @@ export default function LRinquery() {
     }
   ];
 
+  const filteredData = data.filter(inquery => inquery.replyStatus === activeTab);
+
   return (
     <div className="p-6">
+      <Tabs defaultActiveKey="Pending" onChange={setActiveTab} centered>
+        <TabPane tab="Pending" key="Pending" />
+        <TabPane tab="Rejected" key="Rejected" />
+        <TabPane tab="Assign Agent" key="AssignAgent" />
+        <TabPane tab="Completed" key="Completed" />
+      </Tabs>
       <Table
         columns={columns}
-        dataSource={data}
+        dataSource={filteredData}
         rowKey="inqueryID"
         loading={loading}
         pagination={false}

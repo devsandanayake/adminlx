@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { viewEachLongrent, updateStatus } from '../../actions/longrentAction';
 import { useParams } from 'react-router-dom';
-import { Table, Select, Input, Button, Spin, Alert } from 'antd';
+import { Table, Select, Input, Button, Spin, Alert, Tabs ,Tag} from 'antd';
 import { DollarOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
+const { TabPane } = Tabs;
 
 const ViewModel = React.memo(() => {
   const { adCode } = useParams();
@@ -23,7 +24,6 @@ const ViewModel = React.memo(() => {
     if (data && data.length > 0) {
       const initialFormDataArray = data.map(item => ({
         adminKeyStatus: item.adminKeyStatus,
-        monthlyRate: item.monthlyRate || '',
         advancePayment: item.advancePayment || '',
         username: item.username,
         _id: item._id
@@ -105,22 +105,6 @@ const ViewModel = React.memo(() => {
         </Select>
       )
     },
-        {
-      title: 'Monthly Rate',
-      dataIndex: 'monthlyRate',
-      key: 'monthlyRate',
-      render: (_, record) => (
-        <Input.Group compact>
-          <Input
-            style={{ width: '150px', height: '40px' }}
-            prefix={<DollarOutlined />}
-            type="number"
-            value={record.monthlyRate || ''}
-            onChange={(e) => handleInputChange(e.target.value, 'monthlyRate', record._id)}
-          />
-        </Input.Group>
-      )
-    },
     {
       title: 'Advance Payment',
       dataIndex: 'advancePayment',
@@ -145,6 +129,21 @@ const ViewModel = React.memo(() => {
           Update
         </Button>
       )
+    },
+    {
+      title: 'Alert Message',
+      dataIndex: 'alertMsg',
+      key: 'alertMsg',
+      render: (_, record) => {
+        const alertMsg = data.find(d => d._id === record._id)?.alertMsg;
+        return alertMsg ? (
+          <div onClick={() => alert(alertMsg)} className='cursor-pointer'>
+          <Tag color="red" className='text-red-500'>
+            Warning
+          </Tag>
+        </div>
+        ) : <Tag color="green">NO</Tag>;
+      }
     }
   ];
 
@@ -156,18 +155,39 @@ const ViewModel = React.memo(() => {
     return <Alert message="Error" description={error.message} type="error" />;
   }
 
+  const approvedData = formDataArray.filter(item => item.adminKeyStatus === 'Approved');
+  const rejectedData = formDataArray.filter(item => item.adminKeyStatus === 'Rejected');
+  const pendingData = formDataArray.filter(item => item.adminKeyStatus === 'Pending');
+
   return (
     <div className="p-4">
-      {formDataArray.length > 0 ? (
-        <Table
-          dataSource={formDataArray}
-          columns={columns}
-          rowKey="_id"
-          pagination={false}
-        />
-      ) : (
-        <p>No data available.</p>
-      )}
+      <h1 className="text-2xl font-bold mb-4">View Long Rent</h1>
+      <Tabs defaultActiveKey="1">
+        <TabPane tab="Approved" key="1">
+          <Table
+            dataSource={approvedData}
+            columns={columns}
+            rowKey="_id"
+            pagination={false}
+          />
+        </TabPane>
+        <TabPane tab="Rejected" key="2">
+          <Table
+            dataSource={rejectedData}
+            columns={columns}
+            rowKey="_id"
+            pagination={false}
+          />
+        </TabPane>
+        <TabPane tab="Pending" key="3">
+          <Table
+            dataSource={pendingData}
+            columns={columns}
+            rowKey="_id"
+            pagination={false}
+          />
+        </TabPane>
+      </Tabs>
     </div>
   );
 });
