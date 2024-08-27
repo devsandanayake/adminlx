@@ -96,7 +96,7 @@ const ViewModel = React.memo(() => {
       key: 'adminKeyStatus',
       render: (_, record) => (
         <Select
-          defaultValue={record.adminKeyStatus || 'Pending'}
+          defaultValue={ 'Pending'}
           onChange={(value) => handleInputChange(value, 'adminKeyStatus', record._id)}
         >
           <Option value="Approved">Approved</Option>
@@ -105,6 +105,12 @@ const ViewModel = React.memo(() => {
         </Select>
       )
     },
+  {
+      title:'Status',
+      dataIndex:'adminKeyStatus',
+      key:'adminKeyStatus',
+      render:(_,record)=>data.find(d=>d._id===record._id)?.adminKeyStatus
+  },
     {
       title: 'Advance Payment',
       dataIndex: 'advancePayment',
@@ -155,9 +161,9 @@ const ViewModel = React.memo(() => {
     return <Alert message="Error" description={error.message} type="error" />;
   }
 
-  const approvedData = formDataArray.filter(item => item.adminKeyStatus === 'Approved');
-  const rejectedData = formDataArray.filter(item => item.adminKeyStatus === 'Rejected');
-  const pendingData = formDataArray.filter(item => item.adminKeyStatus === 'Pending');
+  const approvedData = data.filter(item => item.adminKeyStatus === 'Approved');
+  const rejectedData = data.filter(item => item.adminKeyStatus === 'Rejected');
+  const pendingData = data.filter(item => item.adminKeyStatus === 'Pending');
 
   return (
     <div className="p-4">
