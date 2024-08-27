@@ -8,6 +8,7 @@ import userReducer from './userReducer';
 import longrentReducer from './longrentReducer';
 import LRentInqueryReducer from './LRentInqueryReducer';
 import chargingReducer from './ChargingReducer';
+import featureReducer from './adsFeatureReducer';
  
 const rootReducer = combineReducers({
     data: dataReducer,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
     longrent: longrentReducer,
     LRentInquery: LRentInqueryReducer,
     charging: chargingReducer,
+    feature: featureReducer,
 
 });
 

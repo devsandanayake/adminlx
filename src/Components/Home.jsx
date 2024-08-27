@@ -88,6 +88,9 @@ const App = () => {
     <div className="min-h-screen bg-gray-100 p-4">
       <h1 className='text-2xl font-semibold'>Advertisement</h1>
       <p className='mb-2 text-gray-600 cursor-pointer'>Home / Advertisement</p>
+      <button onClick={()=>{
+        window.location = '/settings';
+      }}>Settings</button>
       {dataState.loading && <p className="text-blue-600">Loading...</p>}
       {dataState.error && <p className="text-red-600">Error: {dataState.error}</p>}
 
