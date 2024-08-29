@@ -24,8 +24,8 @@ export default function AuctionPage() {
 
   const handleFormSubmit = (adCode) => {
     if (formData[adCode]) {
-      const { startDate, endDate, startPrice, maxRate, BidValue } = formData[adCode];
-      dispatch(updateAuction(adCode, startDate, endDate, startPrice, maxRate, BidValue));
+      const { startDate, startTime,endDate, endTime,startPrice, maxRate, BidValue } = formData[adCode];
+      dispatch(updateAuction(adCode, startDate,startTime, endDate,endTime, startPrice, maxRate, BidValue));
     }
   };
 
@@ -65,11 +65,25 @@ export default function AuctionPage() {
                     onChange={(e) => handleInputChange(auction.adCode, 'startDate', e.target.value)}
                   />
                 </Form.Item>
+                <Form.Item label="Start Time">
+                  <Input
+                    type="time"
+                    value={formData[auction.adCode]?.startTime || auction.auctionStatus.startTime || ''}
+                    onChange={(e) => handleInputChange(auction.adCode, 'startTime', e.target.value)}
+                  />
+                </Form.Item>
                 <Form.Item label="End Date">
                   <Input
                     type="date"
                     value={formData[auction.adCode]?.endDate || auction.auctionStatus.endDate || ''}
                     onChange={(e) => handleInputChange(auction.adCode, 'endDate', e.target.value)}
+                  />
+                </Form.Item>
+                <Form.Item label="End Time">
+                  <Input
+                    type="time"
+                    value={formData[auction.adCode]?.endTime || auction.auctionStatus.endTime || ''}
+                    onChange={(e) => handleInputChange(auction.adCode, 'endTime', e.target.value)}
                   />
                 </Form.Item>
                 <Form.Item label="Max Rate">

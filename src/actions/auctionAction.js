@@ -76,10 +76,10 @@ export const openForAuction = (adCode , value) =>{
 }
 
 //updateAuction
-export const updateAuction = (adCode, startDate,endDate, startPrice,maxRate,BidValue) =>{
+export const updateAuction = (adCode, startDate,startTime,endDate,endTime, startPrice,maxRate,BidValue) =>{
     return (dispatch) => {
         dispatch(auctionRequest());
-        axiosInstance.patch('/api/ads/updateBid', {adCode, startDate,endDate, startPrice,maxRate,BidValue})
+        axiosInstance.patch('/api/ads/updateBid', {adCode, startDate,startTime,endDate,endTime, startPrice,maxRate,BidValue})
             .then(response => {
                 dispatch(auctionUpdate(response.data));
                 window.location.reload();
